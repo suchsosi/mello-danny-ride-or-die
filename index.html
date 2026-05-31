@@ -4,96 +4,388 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mello & Danny: Ride or Die</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a0033 0%, #2d0052 50%, #1a0033 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+        }
+
+        #game-canvas {
+            border: 3px solid #ff69b4;
+            background: #2d0052;
+            display: block;
+            box-shadow: 0 0 40px rgba(255, 105, 180, 0.6);
+        }
+
+        #menu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #2d0052, #1a0033);
+            padding: 40px;
+            border-radius: 20px;
+            border: 3px solid #ff69b4;
+            text-align: center;
+            z-index: 100;
+            box-shadow: 0 0 40px rgba(255, 105, 180, 0.6);
+        }
+
+        #menu h1 {
+            font-size: 48px;
+            color: #ffff00;
+            margin-bottom: 20px;
+        }
+
+        #menu button {
+            margin: 10px;
+            padding: 15px 40px;
+            font-size: 18px;
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #menu button:hover {
+            transform: scale(1.05);
+        }
+
+        #hud {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            color: #ffff00;
+            font-size: 18px;
+            z-index: 50;
+        }
+
+        #danny-dialog {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(20, 10, 40, 0.9);
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: 2px solid #ff69b4;
+            color: #ffff00;
+            max-width: 300px;
+            z-index: 50;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
-    <div id="game-container"></div>
-    <div id="ui-overlay">
-        <div id="score-display">Score: 0</div>
-        <div id="health-display">
-            <div id="health-bar">
-                <div id="health-fill"></div>
-            </div>
-        </div>
-        <div id="level-display">Level: Candy Highway</div>
-        <div id="danny-dialog">
-            <div id="danny-avatar">🍫</div>
-            <div id="danny-text"></div>
-        </div>
-        <button id="pause-btn">⏸ Pause</button>
-    </div>
+    <canvas id="game-canvas" width="1200" height="675"></canvas>
     
-    <div id="pause-menu" class="hidden">
-        <div class="menu-panel">
-            <h1>PAUSED</h1>
-            <button id="resume-btn">Resume Game</button>
-            <button id="menu-btn">Main Menu</button>
-        </div>
-    </div>
-    
-    <div id="main-menu" class="hidden">
-        <div class="menu-panel">
-            <h1>🍫 Mello & Danny 🍬</h1>
-            <h2>Ride or Die</h2>
-            <p>Help Mello and Danny navigate through ridiculous obstacle courses!</p>
-            <button id="start-btn">Start Game</button>
-            <button id="controls-btn">Controls</button>
-        </div>
-    </div>
-    
-    <div id="controls-menu" class="hidden">
-        <div class="menu-panel">
-            <h1>Controls</h1>
-            <p><strong>Arrow Keys</strong> or <strong>WASD</strong> to move</p>
-            <p><strong>Space</strong> for speed boost</p>
-            <p><strong>P</strong> to pause</p>
-            <h3>Objectives:</h3>
-            <p>🌟 Collect Friendship Stars</p>
-            <p>💛 Avoid obstacles</p>
-            <p>🎯 Reach the finish line</p>
-            <button id="back-btn">Back</button>
-        </div>
-    </div>
-    
-    <div id="level-complete" class="hidden">
-        <div class="menu-panel">
-            <h1>Level Complete!</h1>
-            <p id="level-complete-text"></p>
-            <p id="level-score"></p>
-            <button id="next-level-btn">Next Level</button>
-        </div>
-    </div>
-    
-    <div id="game-over" class="hidden">
-        <div class="menu-panel">
-            <h1>Game Over</h1>
-            <p id="final-message"></p>
-            <p id="final-score"></p>
-            <button id="restart-btn">Try Again</button>
-            <button id="menu-btn-2">Main Menu</button>
-        </div>
-    </div>
-    
-    <div id="ending-scene" class="hidden">
-        <div class="ending-content">
-            <div class="characters">
-                <div class="mello">🍬</div>
-                <div class="danny">🍫</div>
-            </div>
-            <div class="car">💜</div>
-            <div class="stars-background"></div>
-            <div class="ending-text">
-                <p id="ending-line-1">Some roads are rough.</p>
-                <p id="ending-line-2">Some obstacles are ridiculous.</p>
-                <p id="ending-line-3">But every journey is better with your best friend beside you.</p>
-                <p id="ending-dedication">Dedicated to Mello and Danny.</p>
-            </div>
-            <button id="ending-restart">Play Again</button>
+    <div id="menu">
+        <h1>🍫 Mello & Danny 🍬</h1>
+        <h2 style="color: #ff69b4; margin-bottom: 30px;">Ride or Die</h2>
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="toggleControls()">Controls</button>
+        <div id="controls-text" class="hidden" style="margin-top: 20px; text-align: left; color: white;">
+            <p><strong>Arrow Keys / WASD</strong> - Move</p>
+            <p><strong>Space</strong> - Speed Boost</p>
+            <p><strong>P</strong> - Pause</p>
         </div>
     </div>
 
-    <script src="sounds.js"></script>
-    <script src="game.js"></script>
+    <div id="hud" class="hidden">
+        <div>Score: <span id="score">0</span></div>
+        <div>Health: <span id="health">100</span>%</div>
+        <div>Level: <span id="level">1</span></div>
+    </div>
+
+    <div id="danny-dialog" class="hidden">
+        <span id="danny-message"></span>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const menu = document.getElementById('menu');
+        const hud = document.getElementById('hud');
+
+        // Game variables
+        let gameRunning = false;
+        let gamePaused = false;
+        let score = 0;
+        let health = 100;
+        let currentLevel = 1;
+        let speedBoostActive = false;
+
+        // Player
+        const player = {
+            x: canvas.width / 2,
+            y: canvas.height - 100,
+            width: 40,
+            height: 40,
+            speedX: 0,
+            speedY: 0,
+            speed: 5
+        };
+
+        // Arrays for game objects
+        let obstacles = [];
+        let collectibles = [];
+
+        // Keyboard input
+        const keys = {};
+        window.addEventListener('keydown', (e) => {
+            keys[e.key.toLowerCase()] = true;
+            if (e.key === 'p' || e.key === 'P') togglePause();
+            if (e.key === ' ') activateBoost();
+        });
+        window.addEventListener('keyup', (e) => {
+            keys[e.key.toLowerCase()] = false;
+        });
+
+        function startGame() {
+            gameRunning = true;
+            gamePaused = false;
+            menu.classList.add('hidden');
+            hud.classList.remove('hidden');
+            score = 0;
+            health = 100;
+            currentLevel = 1;
+            obstacles = [];
+            collectibles = [];
+            gameLoop();
+        }
+
+        function toggleControls() {
+            document.getElementById('controls-text').classList.toggle('hidden');
+        }
+
+        function togglePause() {
+            if (!gameRunning) return;
+            gamePaused = !gamePaused;
+        }
+
+        function activateBoost() {
+            if (!speedBoostActive) {
+                speedBoostActive = true;
+                player.speed = 10;
+                setTimeout(() => {
+                    speedBoostActive = false;
+                    player.speed = 5;
+                }, 300);
+            }
+        }
+
+        function updatePlayer() {
+            player.speedX = 0;
+            player.speedY = 0;
+
+            if (keys['arrowup'] || keys['w']) player.speedY = -player.speed;
+            if (keys['arrowdown'] || keys['s']) player.speedY = player.speed;
+            if (keys['arrowleft'] || keys['a']) player.speedX = -player.speed;
+            if (keys['arrowright'] || keys['d']) player.speedX = player.speed;
+
+            player.x += player.speedX;
+            player.y += player.speedY;
+
+            // Collision with canvas edges
+            if (player.x < 0) player.x = 0;
+            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+            if (player.y < 0) player.y = 0;
+            if (player.y + player.height > canvas.height) player.y = canvas.height - player.height;
+        }
+
+        function spawnObstacle() {
+            const obstacleEmojis = ['🍬', '🍭', '🛒', '🚗', '🍩'];
+            const randomEmoji = obstacleEmojis[Math.floor(Math.random() * obstacleEmojis.length)];
+            obstacles.push({
+                x: Math.random() * (canvas.width - 30),
+                y: -40,
+                width: 40,
+                height: 40,
+                speedY: 2 + Math.random() * 2,
+                emoji: randomEmoji
+            });
+        }
+
+        function spawnCollectible() {
+            const collectibleEmojis = ['⭐', '🍫', '💫'];
+            const randomEmoji = collectibleEmojis[Math.floor(Math.random() * collectibleEmojis.length)];
+            collectibles.push({
+                x: Math.random() * (canvas.width - 30),
+                y: -40,
+                width: 30,
+                height: 30,
+                speedY: 1.5,
+                emoji: randomEmoji
+            });
+        }
+
+        function updateObstacles() {
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].y += obstacles[i].speedY;
+
+                // Check collision with player
+                if (checkCollision(player, obstacles[i])) {
+                    health -= 10;
+                    obstacles.splice(i, 1);
+                    showDannyMessage("Ouch!");
+                    continue;
+                }
+
+                // Remove if off screen
+                if (obstacles[i].y > canvas.height) {
+                    obstacles.splice(i, 1);
+                }
+            }
+        }
+
+        function updateCollectibles() {
+            for (let i = collectibles.length - 1; i >= 0; i--) {
+                collectibles[i].y += collectibles[i].speedY;
+
+                // Check collision with player
+                if (checkCollision(player, collectibles[i])) {
+                    score += 10;
+                    collectibles.splice(i, 1);
+                    showDannyMessage("Nice!");
+                    continue;
+                }
+
+                // Remove if off screen
+                if (collectibles[i].y > canvas.height) {
+                    collectibles.splice(i, 1);
+                }
+            }
+        }
+
+        function checkCollision(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
+        function showDannyMessage(msg) {
+            const messages = [
+                "Mello, incoming donut!",
+                "This feels unsafe.",
+                "Actually we're doing amazing.",
+                "Best road trip ever.",
+                "You got this!",
+                "Friendship level increased.",
+                "Danny believes in you.",
+                "Mello and Danny against the world!"
+            ];
+            const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+            document.getElementById('danny-message').textContent = randomMsg;
+            document.getElementById('danny-dialog').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('danny-dialog').classList.add('hidden');
+            }, 3000);
+        }
+
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = '#2d0052';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw stars
+            ctx.fillStyle = '#ffff00';
+            for (let i = 0; i < 20; i++) {
+                const x = (Math.random() * canvas.width) % canvas.width;
+                const y = (Math.random() * canvas.height) % canvas.height;
+                ctx.font = '12px Arial';
+                ctx.fillText('⭐', x, y);
+            }
+
+            // Draw player
+            ctx.font = '48px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🍬', player.x + player.width / 2, player.y + player.height / 2);
+
+            // Draw obstacles
+            ctx.font = '32px Arial';
+            for (let obstacle of obstacles) {
+                ctx.fillText(obstacle.emoji, obstacle.x + obstacle.width / 2, obstacle.y + obstacle.height / 2);
+            }
+
+            // Draw collectibles
+            ctx.font = '24px Arial';
+            for (let collectible of collectibles) {
+                ctx.fillText(collectible.emoji, collectible.x + collectible.width / 2, collectible.y + collectible.height / 2);
+            }
+
+            // Draw finish line at top
+            ctx.fillStyle = '#ffff00';
+            ctx.fillRect(0, 20, canvas.width, 10);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '16px Arial';
+            ctx.fillText('FINISH', canvas.width / 2, 30);
+        }
+
+        function update() {
+            if (!gameRunning || gamePaused) return;
+
+            updatePlayer();
+            updateObstacles();
+            updateCollectibles();
+
+            // Update HUD
+            document.getElementById('score').textContent = score;
+            document.getElementById('health').textContent = Math.max(0, health);
+            document.getElementById('level').textContent = currentLevel;
+
+            // Spawn new objects randomly
+            if (Math.random() < 0.02) spawnObstacle();
+            if (Math.random() < 0.015) spawnCollectible();
+
+            // Check if player reached finish line
+            if (player.y < 40) {
+                currentLevel++;
+                player.y = canvas.height - 100;
+                obstacles = [];
+                collectibles = [];
+                showDannyMessage("Level Complete!");
+            }
+
+            // Check game over
+            if (health <= 0) {
+                gameRunning = false;
+                menu.classList.remove('hidden');
+                hud.classList.add('hidden');
+                menu.innerHTML = `
+                    <h1>Game Over</h1>
+                    <h2 style="color: #ff69b4; margin-bottom: 30px;">Final Score: ${score}</h2>
+                    <button onclick="location.reload()">Try Again</button>
+                `;
+            }
+        }
+
+        function gameLoop() {
+            if (!gameRunning) return;
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Initial draw
+        draw();
+    </script>
 </body>
 </html>
