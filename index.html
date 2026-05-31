@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mello & Danny: Ride or Die</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+</head>
+<body>
+    <div id="game-container"></div>
+    <div id="ui-overlay">
+        <div id="score-display">Score: 0</div>
+        <div id="health-display">
+            <div id="health-bar">
+                <div id="health-fill"></div>
+            </div>
+        </div>
+        <div id="level-display">Level: Candy Highway</div>
+        <div id="danny-dialog">
+            <div id="danny-avatar">🍫</div>
+            <div id="danny-text"></div>
+        </div>
+        <button id="pause-btn">⏸ Pause</button>
+    </div>
+    
+    <div id="pause-menu" class="hidden">
+        <div class="menu-panel">
+            <h1>PAUSED</h1>
+            <button id="resume-btn">Resume Game</button>
+            <button id="menu-btn">Main Menu</button>
+        </div>
+    </div>
+    
+    <div id="main-menu" class="hidden">
+        <div class="menu-panel">
+            <h1>🍫 Mello & Danny 🍬</h1>
+            <h2>Ride or Die</h2>
+            <p>Help Mello and Danny navigate through ridiculous obstacle courses!</p>
+            <button id="start-btn">Start Game</button>
+            <button id="controls-btn">Controls</button>
+        </div>
+    </div>
+    
+    <div id="controls-menu" class="hidden">
+        <div class="menu-panel">
+            <h1>Controls</h1>
+            <p><strong>Arrow Keys</strong> or <strong>WASD</strong> to move</p>
+            <p><strong>Space</strong> for speed boost</p>
+            <p><strong>P</strong> to pause</p>
+            <h3>Objectives:</h3>
+            <p>🌟 Collect Friendship Stars</p>
+            <p>💛 Avoid obstacles</p>
+            <p>🎯 Reach the finish line</p>
+            <button id="back-btn">Back</button>
+        </div>
+    </div>
+    
+    <div id="level-complete" class="hidden">
+        <div class="menu-panel">
+            <h1>Level Complete!</h1>
+            <p id="level-complete-text"></p>
+            <p id="level-score"></p>
+            <button id="next-level-btn">Next Level</button>
+        </div>
+    </div>
+    
+    <div id="game-over" class="hidden">
+        <div class="menu-panel">
+            <h1>Game Over</h1>
+            <p id="final-message"></p>
+            <p id="final-score"></p>
+            <button id="restart-btn">Try Again</button>
+            <button id="menu-btn-2">Main Menu</button>
+        </div>
+    </div>
+    
+    <div id="ending-scene" class="hidden">
+        <div class="ending-content">
+            <div class="characters">
+                <div class="mello">🍬</div>
+                <div class="danny">🍫</div>
+            </div>
+            <div class="car">💜</div>
+            <div class="stars-background"></div>
+            <div class="ending-text">
+                <p id="ending-line-1">Some roads are rough.</p>
+                <p id="ending-line-2">Some obstacles are ridiculous.</p>
+                <p id="ending-line-3">But every journey is better with your best friend beside you.</p>
+                <p id="ending-dedication">Dedicated to Mello and Danny.</p>
+            </div>
+            <button id="ending-restart">Play Again</button>
+        </div>
+    </div>
+
+    <script src="sounds.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
